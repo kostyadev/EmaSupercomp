@@ -53,10 +53,10 @@ bool plusesAreNotOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
 	if (r1 == 2 && c1 == 4 && r2 == 2 && c2 == 4)
 		int a = 1;
 
-	auto maxLen = max(len1, len2);
+	auto minLen = min(len1, len2);
 	auto dy = abs(c1 - c2);
 	auto dx = abs(r1 - r2);
-	return (dy >= 2 && dx >= (maxLen + 1)) || (dx >= 2 && dy >= (maxLen + 1));
+	return (dy >= 1 && dx >= minLen) || (dx >= 1 && dy >= minLen);
 }
 
 int getMaxLenPairFor(int r, int c, const vector<vector<int>>& plusLens)
@@ -95,8 +95,12 @@ int twoPluses(const vector<string>& grid)
 		plusLens.push_back(row);
 	}
 
-	auto len1 = plusLens[1][1];
-	auto len2 = getMaxLenPairFor(1, 1, plusLens);
+	for(const auto& r : plusLens)
+	{
+		for (const auto c : r)
+			cout << c << " ";
+		cout << endl;
+	}
 
 	int maxVal = 0;
 	for (int ir = 0; ir < plusLens.size(); ++ir)
@@ -121,8 +125,9 @@ int twoPluses(const vector<string>& grid)
 
 int main()
 {
-	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
+	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
 	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input01.txt", std::ofstream::in);
+	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input03.txt", std::ofstream::in);
 
 	string nm_temp;
 	getline(fin, nm_temp);
