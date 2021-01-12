@@ -50,9 +50,6 @@ int getMaxPlusLen(int sIdx, int cIdx, const vector<string>& grid)
 
 bool plusesAreNotOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
 {
-	if (r1 == 3 && c1 == 3 && r2 == 6 && c2 == 5)
-		int a = 1;
-
 	auto minLen = min(len1, len2);
 	auto maxLen = max(len1, len2);
 	auto dc = abs(c1 - c2);
@@ -61,14 +58,12 @@ bool plusesAreNotOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
 	bool caseTwo = (dc < minLen && dc >= 1 && dr >= maxLen);
 	bool caseThree = (dr == 0 && dc >= (minLen + maxLen - 1));
 	bool caseFour = (dc == 0 && dr >= (minLen + maxLen - 1));
-	return caseOne || caseTwo || caseThree || caseFour;
+	bool caseFive = (dc >= minLen && dr >= minLen);
+	return caseOne || caseTwo || caseThree || caseFour || caseFive;
 }
 
 int getLenPairFor(int r, int c, int len, const vector<vector<int>>& plusLens)
 {
-	if (r == 3 && c == 3)
-		int a = 1;
-
 	int maxLen = 0;
 	for (int ir = 0; ir < plusLens.size(); ++ir)
 	{
@@ -140,9 +135,10 @@ int twoPluses(const vector<string>& grid)
 
 int main()
 {
-	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
+	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
 	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input01.txt", std::ofstream::in);
 	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input03.txt", std::ofstream::in);
+	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input09.txt", std::ofstream::in);
 	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input22.txt", std::ofstream::in);
 
 	string nm_temp;
