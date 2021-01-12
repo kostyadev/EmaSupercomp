@@ -50,28 +50,39 @@ int getMaxPlusLen(int sIdx, int cIdx, const vector<string>& grid)
 
 bool plusesAreNotOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
 {
-	if (r1 == 2 && c1 == 4 && r2 == 2 && c2 == 4)
+	if (r1 == 3 && c1 == 3 && r2 == 6 && c2 == 5)
 		int a = 1;
 
 	auto minLen = min(len1, len2);
-	auto dy = abs(c1 - c2);
-	auto dx = abs(r1 - r2);
-	return (dy >= 1 && dx >= minLen) || (dx >= 1 && dy >= minLen);
+	auto maxLen = max(len1, len2);
+	auto dc = abs(c1 - c2);
+	auto dr = abs(r1 - r2);
+	bool caseOne = (dr < minLen && dr >= 1 && dc >= maxLen);
+	bool caseTwo = (dc < minLen && dc >= 1 && dr >= maxLen);
+	bool caseThree = (dr == 0 && dc >= (minLen + maxLen - 1));
+	bool caseFour = (dc == 0 && dr >= (minLen + maxLen - 1));
+	return caseOne || caseTwo || caseThree || caseFour;
 }
 
-int getMaxLenPairFor(int r, int c, const vector<vector<int>>& plusLens)
+int getLenPairFor(int r, int c, int len, const vector<vector<int>>& plusLens)
 {
-	const auto len = plusLens[r][c];
+	if (r == 3 && c == 3)
+		int a = 1;
+
 	int maxLen = 0;
 	for (int ir = 0; ir < plusLens.size(); ++ir)
 	{
 		for (int ic = 0; ic < plusLens[ir].size(); ++ic)
 		{
-			const auto curLen = plusLens[ir][ic];
-			if(plusesAreNotOverlapped(r, c, len, ir, ic, curLen) && curLen > 0)
+			auto curLen = plusLens[ir][ic];
+			while (curLen >= 1)
 			{
-				if (curLen > maxLen)
-					maxLen = curLen;
+				if (plusesAreNotOverlapped(r, c, len, ir, ic, curLen) && curLen > 0)
+				{
+					if (curLen > maxLen)
+						maxLen = curLen;
+				}
+				--curLen;
 			}
 		}
 	}
@@ -107,16 +118,20 @@ int twoPluses(const vector<string>& grid)
 	{
 		for (int ic = 0; ic < plusLens[ir].size(); ++ic)
 		{
-			auto len = plusLens[ir][ic];
+			int len = plusLens[ir][ic];
 			if (len == 0)
 				continue;
 
-			auto area1 = (len - 1) * 4 + 1;
-			auto len2 = getMaxLenPairFor(ir, ic, plusLens);
-			auto area2 = (len2 - 1) * 4 + 1;
-			auto val = area1 * area2;
-			if (val > maxVal)
-				maxVal = val;
+ 			while (len >= 1)
+			{
+				auto area1 = (len - 1) * 4 + 1;
+				auto len2 = getLenPairFor(ir, ic, len, plusLens);
+				auto area2 = (len2 - 1) * 4 + 1;
+				auto val = area1 * area2;
+				if (val > maxVal)
+					maxVal = val;
+				--len;
+			}
 		}
 	}
 
@@ -125,9 +140,10 @@ int twoPluses(const vector<string>& grid)
 
 int main()
 {
-	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
+	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input00.txt", std::ofstream::in);
 	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input01.txt", std::ofstream::in);
-	ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input03.txt", std::ofstream::in);
+	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input03.txt", std::ofstream::in);
+	//ifstream fin("D:\\projects\\hacker_rank\\EmaSupercomp\\input22.txt", std::ofstream::in);
 
 	string nm_temp;
 	getline(fin, nm_temp);
