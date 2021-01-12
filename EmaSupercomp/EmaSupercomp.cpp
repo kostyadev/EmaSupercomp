@@ -48,35 +48,35 @@ int getMaxPlusLen(int sIdx, int cIdx, const vector<string>& grid)
 	return retVal;
 }
 
-bool plusesAreOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
+bool plusesAreNotOverlapped(int r1, int c1, int len1, int r2, int c2, int len2)
 {
+	if (r1 == 2 && c1 == 4 && r2 == 2 && c2 == 4)
+		int a = 1;
+
 	auto maxLen = max(len1, len2);
 	auto dy = abs(c1 - c2);
 	auto dx = abs(r1 - r2);
-	return (dy >= 2 && dx >= (maxLen + 2)) || (dx >= 2 && dy >= (maxLen + 2));
+	return (dy >= 2 && dx >= (maxLen + 1)) || (dx >= 2 && dy >= (maxLen + 1));
 }
 
-int getMaxTwoPluses(int r, int c, const vector<vector<int>>& plusLens)
+int getMaxLenPairFor(int r, int c, const vector<vector<int>>& plusLens)
 {
 	const auto len = plusLens[r][c];
-	const auto area = (len - 1) * 4 + 1;
-
-	int maxArea = 0;
+	int maxLen = 0;
 	for (int ir = 0; ir < plusLens.size(); ++ir)
 	{
 		for (int ic = 0; ic < plusLens[ir].size(); ++ic)
 		{
 			const auto curLen = plusLens[ir][ic];
-			if(!plusesAreOverlapped(r, c, len, ir, ic, curLen) && curLen > 0)
+			if(plusesAreNotOverlapped(r, c, len, ir, ic, curLen) && curLen > 0)
 			{
-				const auto curArea = (curLen - 1) * 4 + 1;
-				if (curLen > maxArea)
-					maxArea = curArea;
+				if (curLen > maxLen)
+					maxLen = curLen;
 			}
 		}
 	}
 
-	return maxArea * area;
+	return maxLen;
 }
 
 int twoPluses(const vector<string>& grid) 
@@ -95,19 +95,22 @@ int twoPluses(const vector<string>& grid)
 		plusLens.push_back(row);
 	}
 
-	for (const auto& r : plusLens)
-	{
-		for (const auto& c : r)
-			cout << c << " ";
-		cout << endl;
-	}
+	auto len1 = plusLens[1][1];
+	auto len2 = getMaxLenPairFor(1, 1, plusLens);
 
 	int maxVal = 0;
 	for (int ir = 0; ir < plusLens.size(); ++ir)
 	{
 		for (int ic = 0; ic < plusLens[ir].size(); ++ic)
 		{
-			auto val = getMaxTwoPluses(ir, ic, plusLens);
+			auto len = plusLens[ir][ic];
+			if (len == 0)
+				continue;
+
+			auto area1 = (len - 1) * 4 + 1;
+			auto len2 = getMaxLenPairFor(ir, ic, plusLens);
+			auto area2 = (len2 - 1) * 4 + 1;
+			auto val = area1 * area2;
 			if (val > maxVal)
 				maxVal = val;
 		}
